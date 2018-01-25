@@ -469,9 +469,12 @@ static const CGFloat MarginLeft = 20.0f;
         zoomRect.origin.y = (CGRectGetHeight(imageViewBounds) / 2) - (CGRectGetHeight(zoomRect) / 2);
         zoomRect.origin.x = (CGRectGetWidth(imageViewBounds) / 2) - (CGRectGetWidth(zoomRect) / 2);
     }
-    
+
+    CGRect cropRectInScrollView = [self convertRect:toRect toView:self.scrollView];
     [UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+    
         self.scrollView.bounds = cropRect;
+        self.scrollView.contentOffset = cropRectInScrollView.origin;
         [self.scrollView zoomToRect:zoomRect animated:NO];
         
         [self layoutCropRectViewWithCropRect:cropRect];
