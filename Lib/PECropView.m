@@ -81,6 +81,7 @@ static const CGFloat MarginLeft = 20.0f;
     
     self.cropRectView = [[PECropRectView alloc] init];
     self.cropRectView.delegate = self;
+    self.cropRectView.showsGridMajor = _showGrid;
     [self addSubview:self.cropRectView];
     
     self.topOverlayView = [[UIView alloc] init];
@@ -498,10 +499,12 @@ static const CGFloat MarginLeft = 20.0f;
     
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         self.cropRectView.showsGridMinor = YES;
+        self.cropRectView.showsGridMajor = YES;
     } else if (gestureRecognizer.state == UIGestureRecognizerStateEnded ||
                gestureRecognizer.state == UIGestureRecognizerStateCancelled ||
                gestureRecognizer.state == UIGestureRecognizerStateFailed) {
         self.cropRectView.showsGridMinor = NO;
+        self.cropRectView.showsGridMajor = NO;
     }
 }
 
@@ -519,6 +522,11 @@ static const CGFloat MarginLeft = 20.0f;
 {
     CGPoint contentOffset = scrollView.contentOffset;
     *targetContentOffset = contentOffset;
+}
+
+- (void) setShowGrid:(BOOL)showGrid {
+    _showGrid = showGrid;
+    self.cropRectView.showsGridMajor = _showGrid;
 }
 
 @end

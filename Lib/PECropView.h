@@ -19,6 +19,7 @@
 @property (nonatomic, readonly) BOOL userHasModifiedCropArea;
 
 @property (nonatomic) BOOL keepingCropAspectRatio;
+@property (nonatomic) BOOL showGrid;
 @property (nonatomic) CGFloat cropAspectRatio;
 
 @property (nonatomic) CGRect cropRect;
