@@ -31,6 +31,7 @@
 
 - (void)resetCropRect;
 - (void)resetCropRectAnimated:(BOOL)animated;
+- (void)initialRectWidth:(CGFloat)width andHeight:(CGFloat)height;
 
 - (void)setRotationAngle:(CGFloat)rotationAngle snap:(BOOL)snap;
 

@@ -487,6 +487,38 @@ static const CGFloat MarginLeft = 20.0f;
     [self zoomToCropRect:toRect andCenter:NO];
 }
 
+- (void)initialRectWidth:(CGFloat)width andHeight:(CGFloat)height
+{
+    CGFloat scaledWidth = width;
+    CGFloat scaledHeight = height;
+    CGRect cropRect = CGRectMake((CGRectGetWidth(self.bounds) - scaledWidth) / 2,
+                                 (CGRectGetHeight(self.bounds) - scaledHeight) / 2,
+                                 scaledWidth,
+                                 scaledHeight);
+    
+    if (CGRectEqualToRect(self.scrollView.frame, cropRect)) {
+        return;
+    }
+    
+    CGRect zoomRect = [self convertRect:cropRect toView:self.zoomingView];
+    zoomRect.size.width = CGRectGetWidth(cropRect) / self.scrollView.zoomScale;
+    zoomRect.size.height = CGRectGetHeight(cropRect) / self.scrollView.zoomScale;
+    
+    CGRect imageViewBounds = self.imageView.bounds;
+    zoomRect.origin.y = (CGRectGetHeight(imageViewBounds) / 2) - (CGRectGetHeight(zoomRect) / 2);
+    zoomRect.origin.x = (CGRectGetWidth(imageViewBounds) / 2) - (CGRectGetWidth(zoomRect) / 2);
+    
+    CGRect cropRectInScrollView = [self convertRect:cropRect toView:self.scrollView];
+    [UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        
+        self.scrollView.bounds = cropRect;
+        self.scrollView.contentOffset = cropRectInScrollView.origin;
+        [self.scrollView zoomToRect:zoomRect animated:NO];
+        
+        [self layoutCropRectViewWithCropRect:cropRect];
+    } completion:NULL];
+}
+
 #pragma mark -
 
 - (void)handleRotation:(UIRotationGestureRecognizer *)gestureRecognizer
