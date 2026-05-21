@@ -8,6 +8,11 @@
 
 #import "PECropRectView.h"
 #import "PEResizeControl.h"
+#import "PECropViewController.h"
+
+@interface PECropViewController (BundleAccess)
++ (NSBundle *)bundle;
+@end
 
 @interface PECropRectView ()<PEResizeControlViewDelegate>
 
@@ -39,7 +44,10 @@
         
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectInset(self.bounds, -2.0f, -2.0f)];
         imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        imageView.image = [[UIImage imageNamed:@"PEPhotoCropEditor.bundle/PEPhotoCropEditorBorder"] resizableImageWithCapInsets:UIEdgeInsetsMake(23.0f, 23.0f, 23.0f, 23.0f)];
+        UIImage *borderImage = [UIImage imageNamed:@"PEPhotoCropEditorBorder"
+                                          inBundle:[PECropViewController bundle]
+                     compatibleWithTraitCollection:nil];
+        imageView.image = [borderImage resizableImageWithCapInsets:UIEdgeInsetsMake(23.0f, 23.0f, 23.0f, 23.0f)];
         [self addSubview:imageView];
         
         self.topLeftCornerView = [[PEResizeControl alloc] init];
