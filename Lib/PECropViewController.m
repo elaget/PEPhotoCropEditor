@@ -26,15 +26,17 @@
     static NSBundle *bundle = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSBundle *classBundle = [NSBundle bundleForClass:self];
-        // SPM: los recursos quedan en un sub-bundle "PEPhotoCropEditor_PEPhotoCropEditor.bundle"
-        // dentro del bundle de la clase.
-        NSURL *bundleURL = [classBundle URLForResource:@"PEPhotoCropEditor_PEPhotoCropEditor" withExtension:@"bundle"];
-        // CocoaPods: el bundle se ubica en el mainBundle como "PEPhotoCropEditor.bundle".
+        // CocoaPods: subbundle "PEPhotoCropEditor.bundle" en el mainBundle.
+        NSURL *bundleURL = [[NSBundle mainBundle] URLForResource:@"PEPhotoCropEditor" withExtension:@"bundle"];
         if (!bundleURL) {
-            bundleURL = [[NSBundle mainBundle] URLForResource:@"PEPhotoCropEditor" withExtension:@"bundle"];
+            // SPM: el bundle SPM "PEPhotoCropEditor_PEPhotoCropEditor.bundle" contiene
+            // anidado el "PEPhotoCropEditor.bundle" original (via Package.swift .copy).
+            NSBundle *classBundle = [NSBundle bundleForClass:self];
+            NSURL *spmModuleURL = [classBundle URLForResource:@"PEPhotoCropEditor_PEPhotoCropEditor" withExtension:@"bundle"];
+            NSBundle *spmModule = spmModuleURL ? [NSBundle bundleWithURL:spmModuleURL] : classBundle;
+            bundleURL = [spmModule URLForResource:@"PEPhotoCropEditor" withExtension:@"bundle"];
         }
-        bundle = bundleURL ? [NSBundle bundleWithURL:bundleURL] : classBundle;
+        bundle = bundleURL ? [NSBundle bundleWithURL:bundleURL] : [NSBundle bundleForClass:self];
     });
 
     return bundle;

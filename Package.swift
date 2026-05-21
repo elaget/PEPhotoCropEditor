@@ -16,11 +16,29 @@ let package = Package(
     targets: [
         .target(
             name: "PEPhotoCropEditor",
-            path: "Lib",
-            resources: [
-                .process("../Resources/PEPhotoCropEditor.bundle"),
+            // path raíz para poder incluir tanto Lib/ como Resources/ — SPM no
+            // permite referenciar recursos fuera del path del target.
+            path: ".",
+            exclude: [
+                "DemoApp",
+                "Movies",
+                "Screenshots",
+                "PEPhotoCropEditor.xcodeproj",
+                "PEPhotoCropEditor.podspec",
+                "README.md",
+                "Rakefile",
+                "LICENSE",
+                "en.lproj",
+                "ja.lproj",
             ],
-            publicHeadersPath: ".",
+            sources: ["Lib"],
+            resources: [
+                // .copy preserva el .bundle original intacto como subbundle,
+                // manteniendo paridad estructural con CocoaPods. El bundle SPM
+                // contiene PEPhotoCropEditor.bundle/...
+                .copy("Resources/PEPhotoCropEditor.bundle"),
+            ],
+            publicHeadersPath: "Lib",
             linkerSettings: [
                 .linkedFramework("QuartzCore"),
                 .linkedFramework("AVFoundation"),
